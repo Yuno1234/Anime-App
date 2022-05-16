@@ -49,6 +49,7 @@ header {
 
 .anime {
     width: 180px;
+    height: 350px;
     margin: 1rem;
     background-color: #ff7758;
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
@@ -75,6 +76,18 @@ header {
     padding: 0.25rem 0.5rem;
     border-radius: 3px;
     font-weight: bold;
+}
+
+.anime-info span.green {
+    color: lightgreen;
+}
+
+.anime-info span.orange {
+    color: orange;
+}
+
+.anime-info span.red {
+    color: red;
 }
 
 #content {
