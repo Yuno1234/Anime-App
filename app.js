@@ -42,6 +42,7 @@ fetch('https://graphql.anilist.co', {
 })
 .then(response => response.json())
 .then(data => {
+  window.dataset = data.data.Page.media
   console.log(data.data.Page.media);
   showAnimes(data.data.Page.media)
 });
@@ -63,6 +64,14 @@ function showAnimes(animes) {
           <span class="${getClassByRate(averageScore)}">${averageScore}</span>
       </div>
     `
+    animeEl.addEventListener('click', ()=> {
+      document.getElementById('content').innerHTML = averageScore
+      window.dataset.forEach((item) => {
+        if (item.id == 20) {
+          console.log(item.description)
+        }
+      })
+    })
     index.appendChild(animeEl)
   })
 }
