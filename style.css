@@ -71,6 +71,10 @@ header {
     letter-spacing: 0.5px;
 }
 
+.anime-info h3 {
+    margin-top: 10px;
+}
+
 .anime-info span {
     background-color: #cc5a41;
     padding: 0.25rem 0.5rem;

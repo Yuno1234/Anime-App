@@ -3,7 +3,10 @@
 
 const index = document.querySelector('#index')
 const form = document.querySelector('#form')
-const search = document.querySelector('#search')
+//const search = document.querySelector('#search')
+const title = document.querySelector('#content h1')
+const paragraph = document.querySelector('#content p')
+const img = document.querySelector('#content img')
 
 const query = `
 query ($page: Int, $perPage: Int, $search: String) {
@@ -15,9 +18,7 @@ query ($page: Int, $perPage: Int, $search: String) {
     media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
       id
       title {
-        romaji
         english
-        native
       }
       type
       genres
@@ -25,6 +26,25 @@ query ($page: Int, $perPage: Int, $search: String) {
       description
       coverImage {
         large
+      }
+      startDate {
+        year
+        month
+      }
+      endDate {
+        year
+        month
+      }
+      episodes
+      stats {
+        statusDistribution {
+          status
+          amount
+        }
+        scoreDistribution {
+          score
+          amount
+        }
       }
     }
   }
@@ -43,14 +63,21 @@ fetch('https://graphql.anilist.co', {
 .then(response => response.json())
 .then(data => {
   window.dataset = data.data.Page.media
-  console.log(data.data.Page.media);
-  showAnimes(data.data.Page.media)
+  console.log(window.dataset);
+  showAnimes(window.dataset)
 });
 
 
 function showAnimes(animes) {
-  index.innerHTML = ''
+  console.log(animes[0].coverImage.large)
 
+  index.innerHTML = ''
+  title.innerHTML = animes[0].title.english
+  paragraph.innerHTML = animes[0].description
+  img.src = animes[0].coverImage.large
+  img.alt = animes[0].title.english
+
+  
   animes.forEach((anime) => {
     const {title: {english}, averageScore, coverImage: {large}, description} = anime
     
@@ -65,12 +92,16 @@ function showAnimes(animes) {
       </div>
     `
     animeEl.addEventListener('click', ()=> {
-      document.getElementById('content').innerHTML = averageScore
-      window.dataset.forEach((item) => {
-        if (item.id == 20) {
-          console.log(item.description)
-        }
-      })
+      title.innerHTML = english
+      paragraph.innerHTML = description
+      img.src = large
+      img.alt = english
+
+      // window.dataset.forEach((item) => {
+      //   if (item.id == 20) {
+      //     console.log(item.description)
+      //   }
+      // })
     })
     index.appendChild(animeEl)
   })
