@@ -7,7 +7,8 @@ const form = document.querySelector('#form')
 const title = document.querySelector('#content h1')
 const paragraph = document.querySelector('#content p')
 const img = document.querySelector('#content img')
-let ctx = document.getElementById('chart').getContext('2d');
+const ctxStatus = document.getElementById('statusChart').getContext('2d');
+const ctxScore = document.getElementById('scoreChart').getContext('2d');
 
 const query = `
 query ($page: Int, $perPage: Int, $search: String) {
@@ -71,24 +72,81 @@ fetch('https://graphql.anilist.co', {
 
 
 function showAnimes(animes) {
-  const statsDist = animes[0].stats.statusDistribution
-  const scoreDist = animes[0].stats.scoreDistribution
   
-  // var stats = convertList(statsDist)
-  // drawChart(stats)
-  //console.log(stats)
-
   //set initial content
   index.innerHTML = ''
   title.innerHTML = animes[0].title.english
   paragraph.innerHTML = animes[0].description
   img.src = animes[0].coverImage.large
   img.alt = animes[0].title.english
-  let stats = convertList(animes[0].stats.statusDistribution)
-  
+  // draw status chart
+  let status = convertList(animes[0].stats.statusDistribution)
+  let statusChart = new Chart(ctxStatus, {
+    type: 'doughnut',
+    data: {
+        labels: ['Current', 'Planning', 'Completed', 'Dropped', 'Paused', 'Repeating'],
+        datasets: [{
+            data: status,
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(153, 102, 255)',
+                'rgb(255, 159, 64)'
+            ],
+            borderColor: 'rgb(230, 231, 235)',
+        }]
+    }
+  });
+  // draw score chart
+  let score = convertList(animes[0].stats.scoreDistribution)
+  let scoreChart = new Chart(ctxScore, {
+      type: 'bar',
+      data: {
+          labels: ['10', '20', '30', '40', '50', '60', '70', '80', '90', '100'],
+          datasets: [{
+              label: 'scores',
+              data: score,
+              backgroundColor: [
+                  'rgba(193, 0, 0, 0.5)',
+                  'rgba(178, 21, 0, 0.5)',
+                  'rgba(163, 41, 0, 0.5)',
+                  'rgba(147, 62, 0, 0.5)',
+                  'rgba(132, 83, 0, 0.5)',
+                  'rgba(117, 103, 0, 0.5)',
+                  'rgba(102, 124, 0, 0.5)',
+                  'rgba(86, 145, 0, 0.5)',
+                  'rgba(71, 165, 0, 0.5)',
+                  'rgba(56, 186, 0, 0.5)'
+              ],
+              borderColor: [
+                  'rgba(193, 0, 0, 1)',
+                  'rgba(178, 21, 0, 1)',
+                  'rgba(163, 41, 0, 1)',
+                  'rgba(147, 62, 0, 1)',
+                  'rgba(132, 83, 0, 1)',
+                  'rgba(117, 103, 0, 1)',
+                  'rgba(102, 124, 0, 1)',
+                  'rgba(86, 145, 0, 1)',
+                  'rgba(71, 165, 0, 1)',
+                  'rgba(56, 186, 0, 1)',
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
 
+  // add anime elements to index
   animes.forEach((anime) => {
-    const {title: {english}, averageScore, coverImage: {large}, description, stats: {statusDistribution}} = anime
+    const {title: {english}, averageScore, coverImage: {large}, description, stats: {statusDistribution, scoreDistribution}} = anime
 
     const animeEl = document.createElement('div')
     animeEl.classList.add('anime')
@@ -99,14 +157,16 @@ function showAnimes(animes) {
           <span class="${getClassByRate(averageScore)}">${averageScore}</span>
       </div>
     `
+    // eventlistener to update content
     animeEl.addEventListener('click', ()=> {
       title.innerHTML = english
       paragraph.innerHTML = description
       img.src = large
       img.alt = english
-      stats = convertList(statusDistribution)
-      console.log(stats)
-      drawChart(stats)
+      statusChart.data.datasets[0].data = convertList(statusDistribution)
+      statusChart.update()
+      scoreChart.data.datasets[0].data = convertList(scoreDistribution)
+      scoreChart.update()
     })
     index.appendChild(animeEl)
   })
@@ -123,24 +183,24 @@ function getClassByRate(score) {
 }
 
 function drawChart(amount) {
-  let myChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-          labels: ['Current', 'Planning', 'Completed', 'Dropped', 'Paused', 'Repeating'],
-          datasets: [{
-              label: '# of Votes',
-              data: amount,
-              backgroundColor: [
-                  'rgba(255, 99, 132)',
-                  'rgba(54, 162, 235)',
-                  'rgba(255, 206, 86)',
-                  'rgba(75, 192, 192)',
-                  'rgba(153, 102, 255)',
-                  'rgba(255, 159, 64)'
-              ]
-          }]
-      }
-  });
+  // let myChart = new Chart(ctx, {
+  //     type: 'doughnut',
+  //     data: {
+  //         labels: ['Current', 'Planning', 'Completed', 'Dropped', 'Paused', 'Repeating'],
+  //         datasets: [{
+  //             label: '# of Votes',
+  //             data: amount,
+  //             backgroundColor: [
+  //                 'rgba(255, 99, 132)',
+  //                 'rgba(54, 162, 235)',
+  //                 'rgba(255, 206, 86)',
+  //                 'rgba(75, 192, 192)',
+  //                 'rgba(153, 102, 255)',
+  //                 'rgba(255, 159, 64)'
+  //             ]
+  //         }]
+  //     }
+  // });
 }
 
 function convertList(originalList) {
