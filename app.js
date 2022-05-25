@@ -2,10 +2,14 @@
 //https://medium.com/nerd-for-tech/how-to-fetch-data-from-the-anilist-api-graphql-using-axios-77527efc8a89
 
 const index = document.querySelector('#index')
-const form = document.querySelector('#form')
+// const form = document.querySelector('#form')
 //const search = document.querySelector('#search')
 const title = document.querySelector('#content h1')
-const paragraph = document.querySelector('#content p')
+const ep = document.querySelector('#episodes')
+const stDate = document.querySelector('#startDate')
+const edDate = document.querySelector('#endDate')
+const genreList = document.querySelector('ul')
+const paragraph = document.querySelector('#description')
 const img = document.querySelector('#content img')
 const ctxStatus = document.getElementById('statusChart').getContext('2d');
 const ctxScore = document.getElementById('scoreChart').getContext('2d');
@@ -30,12 +34,14 @@ query ($page: Int, $perPage: Int, $search: String) {
         large
       }
       startDate {
-        year
         month
+        day
+        year
       }
       endDate {
-        year
         month
+        day
+        year
       }
       episodes
       stats {
@@ -76,10 +82,19 @@ function showAnimes(animes) {
   //set initial content
   index.innerHTML = ''
   title.innerHTML = animes[0].title.english
+  ep.innerHTML = animes[0].episodes
+  stDate.innerHTML = convertDate(animes[0].startDate)
+  edDate.innerHTML = convertDate(animes[0].endDate)
   paragraph.innerHTML = animes[0].description
   img.src = animes[0].coverImage.large
   img.alt = animes[0].title.english
-  // draw status chart
+  animes[0].genres.forEach((genre) => {
+    const li = document.createElement('li')
+    li.innerHTML = genre
+    genreList.appendChild(li)
+  })
+
+  // draw status & score chart
   let status = convertList(animes[0].stats.statusDistribution)
   let statusChart = new Chart(ctxStatus, {
     type: 'doughnut',
@@ -99,7 +114,6 @@ function showAnimes(animes) {
         }]
     }
   });
-  // draw score chart
   let score = convertList(animes[0].stats.scoreDistribution)
   let scoreChart = new Chart(ctxScore, {
       type: 'bar',
@@ -146,7 +160,7 @@ function showAnimes(animes) {
 
   // add anime elements to index
   animes.forEach((anime) => {
-    const {title: {english}, averageScore, coverImage: {large}, description, stats: {statusDistribution, scoreDistribution}} = anime
+    const {title: {english}, averageScore, coverImage: {large}, episodes, startDate, endDate, genres, description, stats: {statusDistribution, scoreDistribution}} = anime
 
     const animeEl = document.createElement('div')
     animeEl.classList.add('anime')
@@ -159,10 +173,21 @@ function showAnimes(animes) {
     `
     // eventlistener to update content
     animeEl.addEventListener('click', ()=> {
+      //update content
       title.innerHTML = english
+      ep.innerHTML = episodes
+      stDate.innerHTML = convertDate(startDate)
+      edDate.innerHTML = convertDate(endDate)
       paragraph.innerHTML = description
       img.src = large
       img.alt = english
+      genreList.innerHTML = ''
+      genres.forEach((genre) => {
+        const li = document.createElement('li')
+        li.innerHTML = genre
+        genreList.appendChild(li)
+      })
+      //update status & score chart
       statusChart.data.datasets[0].data = convertList(statusDistribution)
       statusChart.update()
       scoreChart.data.datasets[0].data = convertList(scoreDistribution)
@@ -182,35 +207,15 @@ function getClassByRate(score) {
   }
 }
 
-function drawChart(amount) {
-  // let myChart = new Chart(ctx, {
-  //     type: 'doughnut',
-  //     data: {
-  //         labels: ['Current', 'Planning', 'Completed', 'Dropped', 'Paused', 'Repeating'],
-  //         datasets: [{
-  //             label: '# of Votes',
-  //             data: amount,
-  //             backgroundColor: [
-  //                 'rgba(255, 99, 132)',
-  //                 'rgba(54, 162, 235)',
-  //                 'rgba(255, 206, 86)',
-  //                 'rgba(75, 192, 192)',
-  //                 'rgba(153, 102, 255)',
-  //                 'rgba(255, 159, 64)'
-  //             ]
-  //         }]
-  //     }
-  // });
-}
-
-function convertList(originalList) {
-  var result = originalList.map(function (obj) {
+function convertList(jsonList) {
+  var data = jsonList.map(function (obj) {
     return obj.amount;
   });
-  return result
+  return data
 }
 
-
-
-
-
+function convertDate(jsonDate) {
+  const months = ["January ", "February ", "March ", "April ", "May ", "June ", "July ", "August ", "September ", "October ", "November ", "December "]
+  var date = Object.values(jsonDate)
+  return months[date[0]-1] + date[1] + ", " + date[2]
+}
