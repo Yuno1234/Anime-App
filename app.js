@@ -7,6 +7,7 @@ const form = document.querySelector('#form')
 const title = document.querySelector('#content h1')
 const paragraph = document.querySelector('#content p')
 const img = document.querySelector('#content img')
+let ctx = document.getElementById('chart').getContext('2d');
 
 const query = `
 query ($page: Int, $perPage: Int, $search: String) {
@@ -52,38 +53,45 @@ query ($page: Int, $perPage: Int, $search: String) {
 `;
 
 let variables = {
-  id: 21087
+  page: 1,
+  perPage: 50,
 }
 
 fetch('https://graphql.anilist.co', {
   method: 'POST',
   headers: { 'content-type': 'application/json' },
-  body: JSON.stringify({ query, variables: variables })
+  body: JSON.stringify({ query, variables })
 })
 .then(response => response.json())
 .then(data => {
   window.dataset = data.data.Page.media
-  console.log(window.dataset);
+  console.log(data.data.Page.media);
   showAnimes(window.dataset)
 });
 
 
 function showAnimes(animes) {
-  console.log(animes[0].coverImage.large)
+  const statsDist = animes[0].stats.statusDistribution
+  const scoreDist = animes[0].stats.scoreDistribution
+  
+  // var stats = convertList(statsDist)
+  // drawChart(stats)
+  //console.log(stats)
 
+  //set initial content
   index.innerHTML = ''
   title.innerHTML = animes[0].title.english
   paragraph.innerHTML = animes[0].description
   img.src = animes[0].coverImage.large
   img.alt = animes[0].title.english
-
+  let stats = convertList(animes[0].stats.statusDistribution)
   
+
   animes.forEach((anime) => {
-    const {title: {english}, averageScore, coverImage: {large}, description} = anime
-    
+    const {title: {english}, averageScore, coverImage: {large}, description, stats: {statusDistribution}} = anime
+
     const animeEl = document.createElement('div')
     animeEl.classList.add('anime')
-
     animeEl.innerHTML = `
       <img src="${large}" alt="${english}">
       <div class="anime-info">
@@ -96,12 +104,9 @@ function showAnimes(animes) {
       paragraph.innerHTML = description
       img.src = large
       img.alt = english
-
-      // window.dataset.forEach((item) => {
-      //   if (item.id == 20) {
-      //     console.log(item.description)
-      //   }
-      // })
+      stats = convertList(statusDistribution)
+      console.log(stats)
+      drawChart(stats)
     })
     index.appendChild(animeEl)
   })
@@ -116,3 +121,36 @@ function getClassByRate(score) {
       return 'red'
   }
 }
+
+function drawChart(amount) {
+  let myChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+          labels: ['Current', 'Planning', 'Completed', 'Dropped', 'Paused', 'Repeating'],
+          datasets: [{
+              label: '# of Votes',
+              data: amount,
+              backgroundColor: [
+                  'rgba(255, 99, 132)',
+                  'rgba(54, 162, 235)',
+                  'rgba(255, 206, 86)',
+                  'rgba(75, 192, 192)',
+                  'rgba(153, 102, 255)',
+                  'rgba(255, 159, 64)'
+              ]
+          }]
+      }
+  });
+}
+
+function convertList(originalList) {
+  var result = originalList.map(function (obj) {
+    return obj.amount;
+  });
+  return result
+}
+
+
+
+
+

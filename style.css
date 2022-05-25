@@ -95,7 +95,7 @@ header {
 }
 
 #content {
-    background-color: #f4f5f9;
+    background-color: #e6e7eb;
     position: fixed;
     height: 100%;
     width: 40%;
@@ -106,4 +106,9 @@ header {
 
 #content img {
     width: 250px;
+}
+
+canvas {
+    height: 400px;
+    width: 100%;
 }
