@@ -3,7 +3,8 @@
 
 const index = document.querySelector('#index')
 // const form = document.querySelector('#form')
-//const search = document.querySelector('#search')
+// const search = document.querySelector('#search')
+
 const title = document.querySelector('#content h1')
 const ep = document.querySelector('#episodes')
 const stDate = document.querySelector('#startDate')
@@ -13,6 +14,10 @@ const paragraph = document.querySelector('#description')
 const img = document.querySelector('#content img')
 const ctxStatus = document.getElementById('statusChart').getContext('2d');
 const ctxScore = document.getElementById('scoreChart').getContext('2d');
+
+let searchTerm
+let statusChart
+let scoreChart
 
 const query = `
 query ($page: Int, $perPage: Int, $search: String) {
@@ -62,6 +67,7 @@ query ($page: Int, $perPage: Int, $search: String) {
 let variables = {
   page: 1,
   perPage: 50,
+  search: searchTerm
 }
 
 fetch('https://graphql.anilist.co', {
@@ -75,6 +81,7 @@ fetch('https://graphql.anilist.co', {
   console.log(data.data.Page.media);
   showAnimes(window.dataset)
 });
+
 
 
 function showAnimes(animes) {
@@ -96,7 +103,7 @@ function showAnimes(animes) {
 
   // draw status & score chart
   let status = convertList(animes[0].stats.statusDistribution)
-  let statusChart = new Chart(ctxStatus, {
+  statusChart = new Chart(ctxStatus, {
     type: 'doughnut',
     data: {
         labels: ['Current', 'Planning', 'Completed', 'Dropped', 'Paused', 'Repeating'],
@@ -115,7 +122,7 @@ function showAnimes(animes) {
     }
   });
   let score = convertList(animes[0].stats.scoreDistribution)
-  let scoreChart = new Chart(ctxScore, {
+  scoreChart = new Chart(ctxScore, {
       type: 'bar',
       data: {
           labels: ['10', '20', '30', '40', '50', '60', '70', '80', '90', '100'],
@@ -196,6 +203,16 @@ function showAnimes(animes) {
     index.appendChild(animeEl)
   })
 }
+
+
+// form.addEventListener('submit', (e) => {
+//   e.preventDefault()
+
+//   searchTerm = search.value
+//   console.log(window.dataset)
+//   console.log(searchTerm)
+// })
+
 
 function getClassByRate(score) {
   if (score >= 80) {
