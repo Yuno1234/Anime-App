@@ -1,9 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@800&family=Sahitya&display=swap');
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
+}
+
+h1, h2, h3 {
+    font-family: 'Exo 2', sans-serif;
+}
+
+p, li {
+    font-family: 'Sahitya', serif;
+    font-size: 15px;
 }
 
 header {
@@ -75,16 +86,20 @@ header {
 }
 
 #details h3 {
-    margin-bottom: 0;
+    margin: 5px 0px 0px;
 }
 
 #details p {
-    margin-top: 0;
+    margin: 0px 0px 5px;
 } 
 
 ul {
     list-style-type: none;
     margin: 0;
+}
+
+li {
+    margin: -3px;
 }
 
 .anime {
@@ -119,7 +134,7 @@ ul {
     background-color: #cc5a41;
     padding: 0.25rem 0.5rem;
     border-radius: 3px;
-    font-weight: bold;
+    font-family: 'Exo 2', sans-serif;
 }
 
 .anime-info span.green {
