@@ -17,6 +17,14 @@ p, li {
     font-size: 15px;
 }
 
+header span {
+    display: none;
+}
+
+.closebtn {
+    display: none;
+}
+
 header {
     display: flex;
     justify-content: space-around;
@@ -152,3 +160,44 @@ li {
 .chartBox {
     margin-top: 50px;
 }
+
+@media only screen and (max-width: 500px) {
+    header span {
+        display: block;
+    }
+
+    .closebtn {
+        display: block;
+        position: sticky;
+        top: 0;
+        font-size: 36px;
+        color: #818181;
+        text-decoration: none;
+    }
+    
+    #index {
+        margin: 0px
+    }
+
+    #content {
+        width: 100%;
+        padding: 20px;
+        overflow-y: scroll;
+    }
+
+    .container {
+        display: block;
+    }
+
+    #content img {
+        width: 250px;
+        display: block;
+        margin: auto;
+    }
+
+    #details {
+        width: 100%;
+    }
+    
+    
+  }

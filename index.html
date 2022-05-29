@@ -10,6 +10,7 @@
 </head>
 <body>  
     <header>
+        <span style="font-size:30px;cursor:pointer" onclick="openContent()">&#9776;</span>
         <h1 class="head">Top 50 Popular Animes</h1>
         <!-- <form id="form">
             <input type="text" id="search" class="search" placeholder="Search">
@@ -27,15 +28,16 @@
             </div> -->
         </div>
         <div id="content">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeContent()">&times;</a>
             <div class="container">
                 <img src="" alt="">
                 <div id="details">
-                    <h3>Episodes</h3>
-                    <p id="episodes"></p>
                     <h3>Start Date</h3>
                     <p id="startDate">Apr 9, 2022</p>
                     <h3>End Date</h3>
                     <p id="endDate">Jun 25, 2022</p>
+                    <h3>Episodes</h3>
+                    <p id="episodes"></p>
                     <h3>Genres</h3>
                     <ul>
                     </ul>

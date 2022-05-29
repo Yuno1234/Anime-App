@@ -4,7 +4,7 @@
 const index = document.querySelector('#index')
 // const form = document.querySelector('#form')
 // const search = document.querySelector('#search')
-
+const content = document.querySelector('#content')
 const title = document.querySelector('#content h1')
 const ep = document.querySelector('#episodes')
 const stDate = document.querySelector('#startDate')
@@ -235,4 +235,12 @@ function convertDate(jsonDate) {
   const months = ["January ", "February ", "March ", "April ", "May ", "June ", "July ", "August ", "September ", "October ", "November ", "December "]
   var date = Object.values(jsonDate)
   return months[date[0]-1] + date[1] + ", " + date[2]
+}
+
+function openContent() {
+  content.style.display = "block";
+}
+
+function closeContent() {
+  content.style.display = "none";
 }
