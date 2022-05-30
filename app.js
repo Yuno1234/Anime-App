@@ -171,6 +171,7 @@ function showAnimes(animes) {
 
     const animeEl = document.createElement('div')
     animeEl.classList.add('anime')
+    animeEl.tabIndex = 1
     animeEl.innerHTML = `
       <img src="${large}" alt="${english}">
       <div class="anime-info">
@@ -179,7 +180,7 @@ function showAnimes(animes) {
       </div>
     `
     // eventlistener to update content
-    animeEl.addEventListener('click', ()=> {
+    animeEl.addEventListener('click', (e) => {
       //update content
       title.innerHTML = english
       ep.innerHTML = episodes
@@ -244,3 +245,7 @@ function openContent() {
 function closeContent() {
   content.style.display = "none";
 }
+
+window.addEventListener('resize', () => {
+  content.style.display = "block";
+});

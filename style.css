@@ -65,6 +65,8 @@ header {
     justify-content: center;
 }
 
+/* .selected {border: 5px solid white} */
+
 #content {
     background-color: #e6e7eb;
     position: fixed;
@@ -120,6 +122,8 @@ li {
     overflow: hidden;
     border-radius: 3px;
 }
+
+.anime:focus {border: 5px solid white}
 
 .anime img{
     width: 100%;
