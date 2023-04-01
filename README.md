@@ -1,5 +1,7 @@
 # Anime-App
-![Banner image](https://github.com/Yuno1234/Anime-App/blob/main/images/Screenshot%202022-05-28%20164626.png)
+![main app image](https://github.com/Yuno1234/Anime-App/blob/main/images/anime_app_screen1.png)
+
+![chart app image](https://github.com/Yuno1234/Anime-App/blob/main/images/anime_app_screen2.png)
 
 ## Description
 Anime-App is a simple web application that tracks the top fifty animes using the Anilist API. It provides a list of fifty most popular animes and the information for them on one page for users to take in the details quick. The information provides the synopsis/description, number of episodes, start and end date, a chart for the status and the score distribution.
